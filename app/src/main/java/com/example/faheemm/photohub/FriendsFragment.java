@@ -7,12 +7,14 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.Toast;
 
 
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link FriendsFragment.OnFragmentInteractionListener} interface
+0
  * to handle interaction events.
  * Use the {@link FriendsFragment#newInstance} factory method to
  * create an instance of this fragment.
@@ -27,7 +29,7 @@ public class FriendsFragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
-
+    View rootView;
 
     /**
      * Use this factory method to create a new instance of
@@ -64,6 +66,22 @@ public class FriendsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+        rootView=inflater.inflate(R.layout.fragment_friends, container,false);
+        Button captureButton = (Button) this.getActivity().findViewById(R.id.button_search);
+        captureButton.bringToFront();
+        captureButton.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        // get an image from the camera
+
+                        Toast.makeText(FriendsFragment.this.getActivity(),"Button Pressed", Toast.LENGTH_LONG).show();
+
+
+                    }
+                }
+        );
+
         return inflater.inflate(R.layout.fragment_friends, container, false);
     }
 
