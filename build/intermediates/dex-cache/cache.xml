@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<items version="2" >
+
+    <item
+        jar="/Users/faheem.m/Dropbox/Android/PhotoHub2/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/21.0.3/classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="81d42bf983a8741f4888a6e333e454e4a5e0eeb7">
+        <dex dex="/Users/faheem.m/Dropbox/Android/PhotoHub2/app/build/intermediates/pre-dexed/debug/classes-210daa13e4526b4c666cfd42de208e5c44d712fa.jar" />
+    </item>
+    <item
+        jar="/Users/faheem.m/Desktop/AndroidLearning/PhotoHub2/app/build/intermediates/exploded-aar/com.android.support/support-v4/21.0.3/classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="2c91c949a45a21cdecf26e03951e46c7beec9ad8">
+        <dex dex="/Users/faheem.m/Desktop/AndroidLearning/PhotoHub2/app/build/intermediates/pre-dexed/debug/classes-59a172346e8f7b08956dceb05ea7d5f3fc7a4477.jar" />
+    </item>
+    <item
+        jar="/Users/faheem.m/Dropbox/Android/PhotoHub2/app/build/intermediates/exploded-aar/com.android.support/support-v4/21.0.3/classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="2c91c949a45a21cdecf26e03951e46c7beec9ad8">
+        <dex dex="/Users/faheem.m/Dropbox/Android/PhotoHub2/app/build/intermediates/pre-dexed/debug/classes-a20801098c3500b091c5a7417b3ebcfa4a7a78c5.jar" />
+    </item>
+    <item
+        jar="/Users/faheem.m/Desktop/AndroidLearning/PhotoHub2/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/21.0.3/classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="81d42bf983a8741f4888a6e333e454e4a5e0eeb7">
+        <dex dex="/Users/faheem.m/Desktop/AndroidLearning/PhotoHub2/app/build/intermediates/pre-dexed/debug/classes-69baf5666fa612233d0108efa89d80faeae9dd56.jar" />
+    </item>
+    <item
+        jar="/Users/faheem.m/Library/Android/sdk/extras/android/m2repository/com/android/support/support-annotations/21.0.3/support-annotations-21.0.3.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="4b74cefe1f0c1b819e7260c8627a14674e37fd35">
+        <dex dex="/Users/faheem.m/Desktop/AndroidLearning/PhotoHub2/app/build/intermediates/pre-dexed/debug/support-annotations-21.0.3-3102bc87486f2d7a802c1b201c98ff736084fef8.jar" />
+    </item>
+    <item
+        jar="/Users/faheem.m/Dropbox/Android/PhotoHub2/app/build/intermediates/exploded-aar/com.android.support/support-v4/21.0.3/libs/internal_impl-21.0.3.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="01ec05bfbafcc07646ba813000bf2ef11742dd03">
+        <dex dex="/Users/faheem.m/Dropbox/Android/PhotoHub2/app/build/intermediates/pre-dexed/debug/internal_impl-21.0.3-630c05911f097070774b339aa0e4caebfa5ff2a8.jar" />
+    </item>
+    <item
+        jar="/Users/faheem.m/Desktop/AndroidLearning/PhotoHub2/app/build/intermediates/exploded-aar/com.android.support/support-v4/21.0.3/libs/internal_impl-21.0.3.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="01ec05bfbafcc07646ba813000bf2ef11742dd03">
+        <dex dex="/Users/faheem.m/Desktop/AndroidLearning/PhotoHub2/app/build/intermediates/pre-dexed/debug/internal_impl-21.0.3-2ac05627a70dccce7c992344f1f8c3b679c3ca03.jar" />
+    </item>
+
+</items>
