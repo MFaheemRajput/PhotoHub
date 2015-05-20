@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -97,22 +98,32 @@ public class GalleryFragment extends Fragment {
 
         Gallery gallery = (Gallery) rootView.findViewById(R.id.gallery1);
         gallery.setAdapter(new ImageAdapter(getActivity(),imageIDs,rootView));
-        gallery.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            public void onItemClick(AdapterView<?> parent, View v, int position,long id)
-            {
-
-                Toast.makeText(getActivity(),"pic" + (position + 1) + " selected",
+        gallery.setSelection(0);
+        gallery.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                Toast.makeText(getActivity(), "pic" + (position + 1) + " selected",
                         Toast.LENGTH_SHORT).show();
 
 
+//                File sdDir = new File(Environment.getExternalStoragePublicDirectory(
+//                        Environment.DIRECTORY_PICTURES), "PhotoHub");
+                Drawable drawable = ((ImageView) view).getDrawable();
+                setImageInImageView(drawable);
+            }
 
-                File sdDir = new File(Environment.getExternalStoragePublicDirectory(
-                        Environment.DIRECTORY_PICTURES), "PhotoHub");
-
-                setImageInImageView(position,sdDir.listFiles());
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
 
             }
         });
+//        gallery.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//            public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
+//
+//
+//
+//            }
+//        });
 
         return rootView;
 
@@ -140,17 +151,17 @@ public class GalleryFragment extends Fragment {
 
     }
 
-    public  void  setImageInImageView(int postion ,File[] sdDirFilesParam){
+    public  void  setImageInImageView(Drawable drawable){
 
-        File singleFile = sdDirFilesParam[postion];
+//        File singleFile = sdDirFilesParam[postion];
 
         ImageView imageView = (ImageView) rootView.findViewById(R.id.image1);
 
-        final BitmapFactory.Options options = new BitmapFactory.Options();
-        options.inSampleSize = 8;
-        Bitmap bm = BitmapFactory.decodeFile(singleFile.getAbsolutePath(),options);
-        imageView.setImageBitmap(bm);
-
+//        final BitmapFactory.Options options = new BitmapFactory.Options();
+//        options.inSampleSize = 8;
+//        Bitmap bm = BitmapFactory.decodeFile(singleFile.getAbsolutePath(),options);
+//        imageView.setImageDrawable(bm);
+        imageView.setImageDrawable(drawable);
         //imageView.setImageBitmap(BitmapFactory.decodeFile(singleFile.getAbsolutePath()));
 
     }

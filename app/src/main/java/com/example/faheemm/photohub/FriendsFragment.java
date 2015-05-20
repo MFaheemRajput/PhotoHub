@@ -2,13 +2,19 @@ package com.example.faheemm.photohub;
 
 import android.app.Activity;
 import android.net.Uri;
+import android.net.wifi.p2p.WifiP2pDevice;
+import android.net.wifi.p2p.WifiP2pDeviceList;
+import android.net.wifi.p2p.WifiP2pManager;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ListView;
 import android.widget.Toast;
+
+import java.util.ArrayList;
 
 
 /**
@@ -19,7 +25,7 @@ import android.widget.Toast;
  * Use the {@link FriendsFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class FriendsFragment extends Fragment {
+public class FriendsFragment extends Fragment implements WifiP2pManager.PeerListListener{
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -31,6 +37,8 @@ public class FriendsFragment extends Fragment {
 
     View rootView;
 
+    private DeviceListAdapter adapter;
+    private ListView listView;
     /**
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
@@ -67,7 +75,7 @@ public class FriendsFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         rootView=inflater.inflate(R.layout.fragment_friends, container,false);
-        Button captureButton = (Button) this.getActivity().findViewById(R.id.button_search);
+        Button captureButton = (Button) rootView.findViewById(R.id.button_search);
         captureButton.bringToFront();
         captureButton.setOnClickListener(
                 new View.OnClickListener() {
@@ -75,12 +83,14 @@ public class FriendsFragment extends Fragment {
                     public void onClick(View v) {
                         // get an image from the camera
 
-                        Toast.makeText(FriendsFragment.this.getActivity(),"Button Pressed", Toast.LENGTH_LONG).show();
+                        Toast.makeText(FriendsFragment.this.getActivity(), "Button Pressed", Toast.LENGTH_LONG).show();
 
 
                     }
                 }
         );
+
+        listView=(ListView)rootView.findViewById(R.id.deviceList);
 
         return inflater.inflate(R.layout.fragment_friends, container, false);
     }
@@ -107,7 +117,14 @@ public class FriendsFragment extends Fragment {
 
     }
 
-    /**
+    @Override
+    public void onPeersAvailable(WifiP2pDeviceList peers) {
+        ArrayList<WifiP2pDevice> devices=new ArrayList<WifiP2pDevice>();
+        devices.addAll(peers.getDeviceList());
+        adapter=new DeviceListAdapter(getActivity(),devices);
+        listView.setAdapter(adapter);
+    }
+/**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated
      * to the activity and potentially other fragments contained in that
