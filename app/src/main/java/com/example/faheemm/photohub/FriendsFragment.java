@@ -39,6 +39,7 @@ public class FriendsFragment extends Fragment implements WifiP2pManager.PeerList
 
     private DeviceListAdapter adapter;
     private ListView listView;
+    private Activity mActivity;
     /**
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
@@ -91,7 +92,10 @@ public class FriendsFragment extends Fragment implements WifiP2pManager.PeerList
         );
 
         listView=(ListView)rootView.findViewById(R.id.deviceList);
+        adapter=new DeviceListAdapter(mActivity,new ArrayList<WifiP2pDevice>());
+        listView.setAdapter(adapter);
 
+        adapter.notifyDataSetChanged();
         return inflater.inflate(R.layout.fragment_friends, container, false);
     }
 
@@ -103,6 +107,7 @@ public class FriendsFragment extends Fragment implements WifiP2pManager.PeerList
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
+        mActivity=activity;
         try {
 
         } catch (ClassCastException e) {
@@ -121,8 +126,10 @@ public class FriendsFragment extends Fragment implements WifiP2pManager.PeerList
     public void onPeersAvailable(WifiP2pDeviceList peers) {
         ArrayList<WifiP2pDevice> devices=new ArrayList<WifiP2pDevice>();
         devices.addAll(peers.getDeviceList());
-        adapter=new DeviceListAdapter(getActivity(),devices);
-        listView.setAdapter(adapter);
+        if(null!=adapter){
+            adapter.notifyDataSetChanged();
+        }
+
     }
 /**
      * This interface must be implemented by activities that contain this
