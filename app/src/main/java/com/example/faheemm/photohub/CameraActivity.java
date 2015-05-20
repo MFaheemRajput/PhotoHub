@@ -91,6 +91,18 @@ public class CameraActivity extends ActionBarActivity implements ActionBar.TabLi
         manager = (WifiP2pManager) getSystemService(Context.WIFI_P2P_SERVICE);
         channel = manager.initialize(this, getMainLooper(), null);
 
+        manager.discoverPeers(channel, new WifiP2pManager.ActionListener() {
+            @Override
+            public void onSuccess() {
+                Log.d("wifi", "onsuccess");
+            }
+
+            @Override
+            public void onFailure(int reasonCode) {
+                Log.d("wifi", "onfailure");
+            }
+        });
+
     }
     @Override
     public void onResume() {
