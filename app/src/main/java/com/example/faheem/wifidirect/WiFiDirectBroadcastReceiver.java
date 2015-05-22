@@ -38,18 +38,18 @@ public class WiFiDirectBroadcastReceiver extends BroadcastReceiver {
     private WifiP2pManager manager;
     private Channel channel;
     private CameraActivity activity;
-    private FriendsFragment fragment;
+
     /**
      * @param manager WifiP2pManager system service
      * @param channel Wifi p2p channel
      * @param activity activity associated with the receiver
      */
-    public WiFiDirectBroadcastReceiver(WifiP2pManager manager, Channel channel, CameraActivity activity,FriendsFragment fragment) {
+    public WiFiDirectBroadcastReceiver(WifiP2pManager manager, Channel channel, CameraActivity activity) {
         super();
         this.manager = manager;
         this.channel = channel;
         this.activity = activity;
-        this.fragment=fragment;
+
     }
 
     /*
@@ -79,7 +79,7 @@ public class WiFiDirectBroadcastReceiver extends BroadcastReceiver {
             // asynchronous call and the calling activity is notified with a
             // callback on PeerListListener.onPeersAvailable()
             if (manager != null) {
-                manager.requestPeers(channel, fragment);
+                manager.requestPeers(channel, activity);
             }
             Log.d(WiFiDirectActivity.TAG, "P2P peers changed");
         } else if (WifiP2pManager.WIFI_P2P_CONNECTION_CHANGED_ACTION.equals(action)) {

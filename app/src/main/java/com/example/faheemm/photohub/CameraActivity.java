@@ -3,6 +3,7 @@ package com.example.faheemm.photohub;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.IntentFilter;
+import android.net.wifi.p2p.WifiP2pDeviceList;
 import android.net.wifi.p2p.WifiP2pManager;
 import android.os.Bundle;
 import android.os.Environment;
@@ -26,10 +27,11 @@ import com.example.faheem.wifidirect.DeviceListFragment;
 import com.example.faheem.wifidirect.WiFiDirectBroadcastReceiver;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Locale;
 
 
-public class CameraActivity extends ActionBarActivity implements ActionBar.TabListener,WifiP2pManager.ChannelListener {
+public class CameraActivity extends ActionBarActivity implements ActionBar.TabListener,WifiP2pManager.ChannelListener,WifiP2pManager.PeerListListener {
 
     private WifiP2pManager manager;
     private boolean isWifiP2pEnabled = false;
@@ -44,7 +46,12 @@ public class CameraActivity extends ActionBarActivity implements ActionBar.TabLi
     SectionsPagerAdapter mSectionsPagerAdapter;
     ViewPager mViewPager;
 
-    FriendsFragment friendsFragment;
+    WifiP2pDeviceList peers;
+
+    public WifiP2pDeviceList getPeers() {
+        return peers;
+    }
+
     public void setIsWifiP2pEnabled(boolean isWifiP2pEnabled) {
         this.isWifiP2pEnabled = isWifiP2pEnabled;
     }
@@ -62,7 +69,7 @@ public class CameraActivity extends ActionBarActivity implements ActionBar.TabLi
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
 
         // Set up the ViewPager with the sections adapter.
-        friendsFragment=FriendsFragment.newInstance("","");
+
         mViewPager = (ViewPager) findViewById(R.id.pager);
         mViewPager.setAdapter(mSectionsPagerAdapter);
 
@@ -70,6 +77,15 @@ public class CameraActivity extends ActionBarActivity implements ActionBar.TabLi
             @Override
             public void onPageSelected(int position) {
                 actionBar.setSelectedNavigationItem(position);
+                if(position==2 && null!=peers){
+//                    onPeersAvailable(peers);
+
+                    Fragment fragment=((SectionsPagerAdapter) mViewPager.getAdapter()).getItem(2);
+
+                    if(null!=fragment && fragment instanceof FriendsFragment){
+                        ((FriendsFragment)fragment).onPeersAvailable(peers);
+                    }
+                }
             }
         });
 
@@ -107,7 +123,7 @@ public class CameraActivity extends ActionBarActivity implements ActionBar.TabLi
     @Override
     public void onResume() {
         super.onResume();
-        receiver = new WiFiDirectBroadcastReceiver(manager, channel, this,friendsFragment);
+        receiver = new WiFiDirectBroadcastReceiver(manager, channel, this);
         registerReceiver(receiver, intentFilter);
     }
     @Override
@@ -115,6 +131,19 @@ public class CameraActivity extends ActionBarActivity implements ActionBar.TabLi
         super.onPause();
         unregisterReceiver(receiver);
     }
+
+    @Override
+    public void onPeersAvailable(WifiP2pDeviceList peers) {
+        this.peers=peers;
+
+        Fragment fragment=((SectionsPagerAdapter) mViewPager.getAdapter()).getItem(mViewPager.getCurrentItem());
+
+        if(null!=fragment && fragment instanceof FriendsFragment){
+            ((FriendsFragment)fragment).onPeersAvailable(peers);
+        }
+
+    }
+
     public void resetData() {
 //        DeviceListFragment fragmentList = (DeviceListFragment) getFragmentManager()
 //                .findFragmentById(R.id.frag_list);
@@ -182,28 +211,26 @@ public class CameraActivity extends ActionBarActivity implements ActionBar.TabLi
      */
     public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
+        private ArrayList<Fragment> fragments=new ArrayList<>();
         public SectionsPagerAdapter(FragmentManager fm) {
             super(fm);
+            fragments.add(new CameraFragment());
+            fragments.add(GalleryFragment.newInstance("",""));
+            fragments.add(FriendsFragment.newInstance("",""));
         }
 
         @Override
         public Fragment getItem(int position) {
             // getItem is called to instantiate the fragment for the given page.
             // Return a PlaceholderFragment (defined as a static inner class below).
-            if(position==0)
-                return new CameraFragment();
-            else if(position==1)
-                return  GalleryFragment.newInstance("","");
-            else
-                //return PlaceholderFragment.newInstance(1);
-                return friendsFragment;
+            return fragments.get(position);
         }
 
 
         @Override
         public int getCount() {
             // Show 3 total pages.
-            return 3;
+            return fragments.size();
         }
 
         @Override

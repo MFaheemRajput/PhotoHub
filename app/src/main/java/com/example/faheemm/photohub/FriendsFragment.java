@@ -25,7 +25,7 @@ import java.util.ArrayList;
  * Use the {@link FriendsFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class FriendsFragment extends Fragment implements WifiP2pManager.PeerListListener{
+public class FriendsFragment extends Fragment{
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -95,7 +95,7 @@ public class FriendsFragment extends Fragment implements WifiP2pManager.PeerList
         adapter=new DeviceListAdapter(mActivity,new ArrayList<WifiP2pDevice>());
         listView.setAdapter(adapter);
 
-        adapter.notifyDataSetChanged();
+
         return inflater.inflate(R.layout.fragment_friends, container, false);
     }
 
@@ -122,11 +122,11 @@ public class FriendsFragment extends Fragment implements WifiP2pManager.PeerList
 
     }
 
-    @Override
+
     public void onPeersAvailable(WifiP2pDeviceList peers) {
-        ArrayList<WifiP2pDevice> devices=new ArrayList<WifiP2pDevice>();
-        devices.addAll(peers.getDeviceList());
         if(null!=adapter){
+            adapter.getPeers().clear();
+            adapter.getPeers().addAll(peers.getDeviceList());
             adapter.notifyDataSetChanged();
         }
 

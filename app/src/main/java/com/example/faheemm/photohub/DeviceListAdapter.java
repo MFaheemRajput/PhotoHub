@@ -21,6 +21,11 @@ public class DeviceListAdapter extends BaseAdapter{
         this.peers=peers;
         this.inflater=LayoutInflater.from(context);
     }
+
+    public ArrayList<WifiP2pDevice> getPeers() {
+        return peers;
+    }
+
     @Override
     public int getCount() {
         return peers.size();
