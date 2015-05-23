@@ -96,7 +96,7 @@ public class FriendsFragment extends Fragment{
         listView.setAdapter(adapter);
 
 
-        return inflater.inflate(R.layout.fragment_friends, container, false);
+        return rootView;
     }
 
     // TODO: Rename method, update argument and hook method into UI event
