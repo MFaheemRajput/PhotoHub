@@ -2,6 +2,7 @@
 <resources>
 
     <string name="app_name">PhotoHub</string>
+    <string name="send_to">Share Photo</string>
     <string name="title_section1">Camera</string>
     <string name="title_section2">Gallery</string>
     <string name="title_section3">Friends List</string>

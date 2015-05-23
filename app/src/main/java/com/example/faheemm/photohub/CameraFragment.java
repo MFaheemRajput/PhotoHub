@@ -85,8 +85,11 @@ public class CameraFragment extends Fragment  {
 
 
 //        rootView=textView;
+
+        setHasOptionsMenu(false);
         return rootView;
     }
+
 
     private Camera.PictureCallback mPicture = new Camera.PictureCallback() {
 

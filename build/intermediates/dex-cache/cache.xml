@@ -2,32 +2,32 @@
 <items version="2" >
 
     <item
-        jar="C:\Users\younas.m\StudioProjects\PhotoHub\app\build\intermediates\exploded-aar\com.android.support\appcompat-v7\21.0.3\classes.jar"
+        jar="/Users/MFRajput/Dropbox/Android/PhotoHub2/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/21.0.3/classes.jar"
         jumboMode="false"
         revision="21.1.2"
         sha1="81d42bf983a8741f4888a6e333e454e4a5e0eeb7">
-        <dex dex="C:\Users\younas.m\StudioProjects\PhotoHub\app\build\intermediates\pre-dexed\debug\classes-04e09de84bbad5e49ad9e5781a9a8a46f9145aa1.jar" />
+        <dex dex="/Users/MFRajput/Dropbox/Android/PhotoHub2/app/build/intermediates/pre-dexed/debug/classes-7684c16809daad9ee6ddbd5057e7cedd6eadb487.jar" />
     </item>
     <item
-        jar="C:\Users\younas.m\AppData\Local\Android\sdk\extras\android\m2repository\com\android\support\support-annotations\21.0.3\support-annotations-21.0.3.jar"
+        jar="/Users/MFRajput/Library/Android/sdk/extras/android/m2repository/com/android/support/support-annotations/21.0.3/support-annotations-21.0.3.jar"
         jumboMode="false"
         revision="21.1.2"
         sha1="4b74cefe1f0c1b819e7260c8627a14674e37fd35">
-        <dex dex="C:\Users\younas.m\StudioProjects\PhotoHub\app\build\intermediates\pre-dexed\debug\support-annotations-21.0.3-2ace76548a6c2c2edb6ad356270f680279f6d4db.jar" />
+        <dex dex="/Users/MFRajput/Dropbox/Android/PhotoHub2/app/build/intermediates/pre-dexed/debug/support-annotations-21.0.3-39c4f96bf5d3d686936caafb4eaa179dc3464fcf.jar" />
     </item>
     <item
-        jar="C:\Users\younas.m\StudioProjects\PhotoHub\app\build\intermediates\exploded-aar\com.android.support\support-v4\21.0.3\libs\internal_impl-21.0.3.jar"
+        jar="/Users/MFRajput/Dropbox/Android/PhotoHub2/app/build/intermediates/exploded-aar/com.android.support/support-v4/21.0.3/libs/internal_impl-21.0.3.jar"
         jumboMode="false"
         revision="21.1.2"
         sha1="01ec05bfbafcc07646ba813000bf2ef11742dd03">
-        <dex dex="C:\Users\younas.m\StudioProjects\PhotoHub\app\build\intermediates\pre-dexed\debug\internal_impl-21.0.3-ca45bdad6c06bba9cfe89bf471489e4550b3c099.jar" />
+        <dex dex="/Users/MFRajput/Dropbox/Android/PhotoHub2/app/build/intermediates/pre-dexed/debug/internal_impl-21.0.3-cc0fa1e9b3b18bdde98de22b315b5066ecf1acd2.jar" />
     </item>
     <item
-        jar="C:\Users\younas.m\StudioProjects\PhotoHub\app\build\intermediates\exploded-aar\com.android.support\support-v4\21.0.3\classes.jar"
+        jar="/Users/MFRajput/Dropbox/Android/PhotoHub2/app/build/intermediates/exploded-aar/com.android.support/support-v4/21.0.3/classes.jar"
         jumboMode="false"
         revision="21.1.2"
         sha1="2c91c949a45a21cdecf26e03951e46c7beec9ad8">
-        <dex dex="C:\Users\younas.m\StudioProjects\PhotoHub\app\build\intermediates\pre-dexed\debug\classes-da60f82058e01a5138bd8d22898cdd09046d1608.jar" />
+        <dex dex="/Users/MFRajput/Dropbox/Android/PhotoHub2/app/build/intermediates/pre-dexed/debug/classes-93c57b6ad5b288b9bddd308849667826675a79db.jar" />
     </item>
 
 </items>

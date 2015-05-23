@@ -9,6 +9,7 @@ import android.view.SurfaceView;
 import android.widget.FrameLayout;
 
 import java.io.IOException;
+import java.util.List;
 
 /**
  * Created by faheem.m on 03/04/2015.
@@ -23,6 +24,7 @@ class CameraPreview extends SurfaceView implements SurfaceHolder.Callback {
         super(context);
         mCamera = camera;
         mCamera.setDisplayOrientation(90);
+        //mCamera.size = getOptimalPreviewSize();
         // Install a SurfaceHolder.Callback so we get notified when the
         // underlying surface is created and destroyed.
         mHolder = getHolder();
@@ -44,7 +46,6 @@ class CameraPreview extends SurfaceView implements SurfaceHolder.Callback {
     public void surfaceCreated(SurfaceHolder holder) {
         // The Surface has been created, now tell the camera where to draw the preview.
         try {
-
 
             Camera.Parameters parameters = mCamera.getParameters();
             parameters.setPreviewSize(CameraPreview.this.getWidth(), CameraPreview.this.getHeight());
@@ -97,4 +98,36 @@ class CameraPreview extends SurfaceView implements SurfaceHolder.Callback {
         }
     }
 
+
+    private Camera.Size getOptimalPreviewSize(List<Camera.Size> sizes, int w, int h) {
+        final double ASPECT_TOLERANCE = 0.1;
+        double targetRatio=(double)h / w;
+
+        if (sizes == null) return null;
+
+        Camera.Size optimalSize = null;
+        double minDiff = Double.MAX_VALUE;
+
+        int targetHeight = h;
+
+        for (Camera.Size size : sizes) {
+            double ratio = (double) size.width / size.height;
+            if (Math.abs(ratio - targetRatio) > ASPECT_TOLERANCE) continue;
+            if (Math.abs(size.height - targetHeight) < minDiff) {
+                optimalSize = size;
+                minDiff = Math.abs(size.height - targetHeight);
+            }
+        }
+
+        if (optimalSize == null) {
+            minDiff = Double.MAX_VALUE;
+            for (Camera.Size size : sizes) {
+                if (Math.abs(size.height - targetHeight) < minDiff) {
+                    optimalSize = size;
+                    minDiff = Math.abs(size.height - targetHeight);
+                }
+            }
+        }
+        return optimalSize;
+    }
 }

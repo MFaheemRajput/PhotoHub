@@ -1,15 +1,17 @@
 package com.example.faheemm.photohub;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -39,6 +41,13 @@ public class GalleryFragment extends Fragment {
     private Cursor cursor;
     private int columnIndex;
     ImageView selectedImage;
+
+    // CLIENT SECRET                      fd1db8e2-0e5e-446e-b11d-4a08c6113cba
+    // CLIENT ID (DEVELOPMENT MODE)*      9433665bfd6d40fe9e9458a80208e2a9
+
+    int imageIndex = 0 ;
+
+
 
     private Integer[] imageIDs = {
             R.drawable.sample_0,
@@ -84,8 +93,39 @@ public class GalleryFragment extends Fragment {
 
         }
 
+        setHasOptionsMenu(true);
    }
 
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+
+        super.onCreateOptionsMenu(menu, inflater);
+
+        //getActivity().getMenuInflater().inflate(R.menu.menu_camera, menu);
+
+        menu.findItem(R.id.share).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem menuItem) {
+
+                if (menuItem.getItemId() == R.id.share) {
+
+                    File sdDir = new File(Environment.getExternalStoragePublicDirectory(
+                            Environment.DIRECTORY_PICTURES), "PhotoHub");
+                    File[] imagesArray = sdDir.listFiles();
+                    File  singleFile = imagesArray[imageIndex];
+                    Uri imageUri = Uri.fromFile(singleFile);
+
+                    Intent shareIntent = new Intent();
+                    shareIntent.setAction(Intent.ACTION_SEND);
+                    shareIntent.putExtra(Intent.EXTRA_STREAM, imageUri);
+                    shareIntent.setType("image/jpeg");
+                    startActivity(Intent.createChooser(shareIntent, getResources().getText(R.string.send_to)));
+                }
+                return false;
+            }
+        });
+
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -94,21 +134,21 @@ public class GalleryFragment extends Fragment {
         // Inflate the layout for this fragment
 
 
-        rootView = inflater.inflate(R.layout.fragment_gallery, container,false);
+        rootView = inflater.inflate(R.layout.fragment_gallery, container, false);
 
         Gallery gallery = (Gallery) rootView.findViewById(R.id.gallery1);
-        gallery.setAdapter(new ImageAdapter(getActivity(),imageIDs,rootView));
+        gallery.setAdapter(new ImageAdapter(getActivity(), imageIDs, rootView));
         gallery.setSelection(0);
         gallery.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
                 Toast.makeText(getActivity(), "pic" + (position + 1) + " selected",
                         Toast.LENGTH_SHORT).show();
 
-
-//                File sdDir = new File(Environment.getExternalStoragePublicDirectory(
-//                        Environment.DIRECTORY_PICTURES), "PhotoHub");
+                imageIndex = position;
                 Drawable drawable = ((ImageView) view).getDrawable();
+
                 setImageInImageView(drawable);
             }
 
