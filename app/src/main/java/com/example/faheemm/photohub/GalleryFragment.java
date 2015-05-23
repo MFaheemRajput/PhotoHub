@@ -3,6 +3,7 @@ package com.example.faheemm.photohub;
 import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
@@ -15,9 +16,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.Gallery;
 import android.widget.ImageView;
 import android.widget.Toast;
+
+import com.aviary.android.feather.sdk.AviaryIntent;
+import com.aviary.android.feather.sdk.internal.headless.utils.MegaPixels;
 
 import java.io.File;
 
@@ -115,13 +120,22 @@ public class GalleryFragment extends Fragment {
                     File  singleFile = imagesArray[imageIndex];
                     Uri imageUri = Uri.fromFile(singleFile);
 
+
+
+
                     Intent shareIntent = new Intent();
                     shareIntent.setAction(Intent.ACTION_SEND);
                     shareIntent.putExtra(Intent.EXTRA_STREAM, imageUri);
                     shareIntent.setType("image/jpeg");
                     startActivity(Intent.createChooser(shareIntent, getResources().getText(R.string.send_to)));
+
+
+
+
+                    // start the activity
+                    startActivityForResult(shareIntent, 1);
                 }
-                return false;
+                return true;
             }
         });
 
@@ -132,7 +146,6 @@ public class GalleryFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         // Inflate the layout for this fragment
-
 
         rootView = inflater.inflate(R.layout.fragment_gallery, container, false);
 
@@ -147,6 +160,7 @@ public class GalleryFragment extends Fragment {
                         Toast.LENGTH_SHORT).show();
 
                 imageIndex = position;
+
                 Drawable drawable = ((ImageView) view).getDrawable();
 
                 setImageInImageView(drawable);
@@ -157,6 +171,42 @@ public class GalleryFragment extends Fragment {
 
             }
         });
+
+
+        Button sendButton = (Button)rootView.findViewById(R.id.sendImg);
+        sendButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+
+        });
+
+        Button editButton = (Button)rootView.findViewById(R.id.editImg);
+        editButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+
+                File sdDir = new File(Environment.getExternalStoragePublicDirectory(
+                        Environment.DIRECTORY_PICTURES), "PhotoHub");
+                File[] imagesArray = sdDir.listFiles();
+                File  singleFile = imagesArray[imageIndex];
+                Uri imageUri = Uri.fromFile(singleFile);
+                Intent newIntent = new AviaryIntent.Builder(getActivity())
+                        .setData(imageUri) // input image src
+                        .withOutput(Uri.parse("file://" + singleFile)) // output file
+                        .withOutputFormat(Bitmap.CompressFormat.JPEG) // output format
+                        .withOutputSize(MegaPixels.Mp5) // output size
+                        .withOutputQuality(90) // output quality
+                        .build();
+
+                // start the activity
+                startActivityForResult(newIntent, 1);
+            }
+
+        });
+
 //        gallery.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 //            public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
 //

@@ -7,22 +7,50 @@
     android:orientation="vertical"
     android:weightSum="100">
 
-    <Gallery
-        android:id="@+id/gallery1"
+        <Gallery
+            android:id="@+id/gallery1"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="20" />
+
+        <ImageView
+            android:id="@+id/image1"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="80"
+            android:src="@drawable/sample_0"
+            android:longClickable="false"
+            android:layout_gravity="center_horizontal" />
+
+    <RelativeLayout
+
+        android:id="@+id/fffe"
         android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@color/aviary_accent_red"
 
-        android:layout_height="0dp"
-        android:layout_weight="20" />
+    >
 
-    <ImageView
-        android:id="@+id/image1"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="80"
-        android:src="@drawable/sample_0"
-        android:longClickable="false"
-        android:layout_gravity="center_horizontal"
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/editImg"
+            android:text="Edit"
+            android:layout_marginLeft="75dp"
+            android:layout_marginTop="5dp"
+            />
 
-         />
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Send"
+            android:id="@+id/sendImg"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="75dp"
+            android:layout_marginTop="5dp"
+            />
+
+    </RelativeLayout>
+
 
 </LinearLayout>
