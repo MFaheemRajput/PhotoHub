@@ -22,8 +22,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.example.faheem.wifidirect.DeviceDetailFragment;
-import com.example.faheem.wifidirect.DeviceListFragment;
 import com.example.faheem.wifidirect.WiFiDirectBroadcastReceiver;
 
 import java.io.File;
@@ -41,7 +39,7 @@ public class CameraActivity extends ActionBarActivity implements ActionBar.TabLi
     private WifiP2pManager.Channel channel;
     private BroadcastReceiver receiver = null;
 
-
+    private  Menu mMenu;
 
     SectionsPagerAdapter mSectionsPagerAdapter;
     ViewPager mViewPager;
@@ -120,6 +118,9 @@ public class CameraActivity extends ActionBarActivity implements ActionBar.TabLi
         });
 
     }
+
+
+
     @Override
     public void onResume() {
         super.onResume();
@@ -176,6 +177,11 @@ public class CameraActivity extends ActionBarActivity implements ActionBar.TabLi
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_camera, menu);
+
+        //menu.findItem(R.id.share).setOnMenuItemClickListener(on);
+
+
+
         return true;
     }
 
@@ -183,10 +189,10 @@ public class CameraActivity extends ActionBarActivity implements ActionBar.TabLi
     public boolean onOptionsItemSelected(MenuItem item) {
 
         int id = item.getItemId();
-        if (id == R.id.action_settings) {
-            return true;
-        }
+        if (id == R.id.share){
 
+        return true;
+        }
         return super.onOptionsItemSelected(item);
     }
 
@@ -211,7 +217,7 @@ public class CameraActivity extends ActionBarActivity implements ActionBar.TabLi
      */
     public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
-        private ArrayList<Fragment> fragments=new ArrayList<>();
+        private ArrayList<Fragment> fragments=new ArrayList<Fragment>();
         public SectionsPagerAdapter(FragmentManager fm) {
             super(fm);
             fragments.add(new CameraFragment());
