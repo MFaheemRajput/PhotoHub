@@ -6,9 +6,12 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.net.wifi.p2p.WifiP2pConfig;
+import android.net.wifi.p2p.WifiP2pDevice;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -19,12 +22,17 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.Gallery;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.aviary.android.feather.sdk.AviaryIntent;
 import com.aviary.android.feather.sdk.internal.headless.utils.MegaPixels;
+import com.example.faheem.wifidirect.FileTransferService;
+import com.example.faheem.wifidirect.Utils;
+import com.example.faheem.wifidirect.WiFiDirectActivity;
 
 import java.io.File;
+import java.util.ArrayList;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -35,6 +43,11 @@ import java.io.File;
  * create an instance of this fragment.
  */
 public class GalleryFragment extends Fragment {
+
+    public static final String IP_SERVER = "192.168.49.1";
+    public static int PORT = 8988;
+
+    private ArrayList<WifiP2pDevice> peers=new ArrayList<WifiP2pDevice>();
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -148,7 +161,8 @@ public class GalleryFragment extends Fragment {
         // Inflate the layout for this fragment
 
         rootView = inflater.inflate(R.layout.fragment_gallery, container, false);
-
+        ;
+        peers.addAll(((CameraActivity) getActivity()).getPeers());
         Gallery gallery = (Gallery) rootView.findViewById(R.id.gallery1);
         gallery.setAdapter(new ImageAdapter(getActivity(), imageIDs, rootView));
         gallery.setSelection(0);
@@ -177,6 +191,37 @@ public class GalleryFragment extends Fragment {
         sendButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                File sdDir = new File(Environment.getExternalStoragePublicDirectory(
+                        Environment.DIRECTORY_PICTURES), "PhotoHub");
+                File[] imagesArray = sdDir.listFiles();
+                File  singleFile = imagesArray[imageIndex];
+                Uri uri = Uri.fromFile(singleFile);
+
+
+                String localIP = Utils.getLocalIPAddress();
+                // Trick to find the ip in the file /proc/net/arp
+
+                String client_mac_fixed = new String(device.deviceAddress).replace("99", "19");
+                String clientIP = Utils.getIPFromMac(client_mac_fixed);
+
+                // User has picked an image. Transfer it to group owner i.e peer using
+                // FileTransferService.
+
+                TextView statusText = (TextView) mContentView.findViewById(R.id.status_text);
+                statusText.setText("Sending: " + uri);
+                Log.d(WiFiDirectActivity.TAG, "Intent----------- " + uri);
+                Intent serviceIntent = new Intent(getActivity(), FileTransferService.class);
+                serviceIntent.setAction(FileTransferService.ACTION_SEND_FILE);
+                serviceIntent.putExtra(FileTransferService.EXTRAS_FILE_PATH, uri.toString());
+
+                if(localIP.equals(IP_SERVER)){
+                    serviceIntent.putExtra(FileTransferService.EXTRAS_ADDRESS, clientIP);
+                }else{
+                    serviceIntent.putExtra(FileTransferService.EXTRAS_ADDRESS, IP_SERVER);
+                }
+
+                serviceIntent.putExtra(FileTransferService.EXTRAS_PORT, PORT);
+                getActivity().startService(serviceIntent);
 
             }
 
@@ -188,21 +233,21 @@ public class GalleryFragment extends Fragment {
             public void onClick(View view) {
 
 
-                File sdDir = new File(Environment.getExternalStoragePublicDirectory(
-                        Environment.DIRECTORY_PICTURES), "PhotoHub");
-                File[] imagesArray = sdDir.listFiles();
-                File  singleFile = imagesArray[imageIndex];
-                Uri imageUri = Uri.fromFile(singleFile);
-                Intent newIntent = new AviaryIntent.Builder(getActivity())
-                        .setData(imageUri) // input image src
-                        .withOutput(Uri.parse("file://" + singleFile)) // output file
-                        .withOutputFormat(Bitmap.CompressFormat.JPEG) // output format
-                        .withOutputSize(MegaPixels.Mp5) // output size
-                        .withOutputQuality(90) // output quality
-                        .build();
-
-                // start the activity
-                startActivityForResult(newIntent, 1);
+//                File sdDir = new File(Environment.getExternalStoragePublicDirectory(
+//                        Environment.DIRECTORY_PICTURES), "PhotoHub");
+//                File[] imagesArray = sdDir.listFiles();
+//                File  singleFile = imagesArray[imageIndex];
+//                Uri imageUri = Uri.fromFile(singleFile);
+//                Intent newIntent = new AviaryIntent.Builder(getActivity())
+//                        .setData(imageUri) // input image src
+//                        .withOutput(Uri.parse("file://" + singleFile)) // output file
+//                        .withOutputFormat(Bitmap.CompressFormat.JPEG) // output format
+//                        .withOutputSize(MegaPixels.Mp5) // output size
+//                        .withOutputQuality(90) // output quality
+//                        .build();
+//
+//                // start the activity
+//                startActivityForResult(newIntent, 1);
             }
 
         });

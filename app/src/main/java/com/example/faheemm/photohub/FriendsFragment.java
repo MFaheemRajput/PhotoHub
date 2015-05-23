@@ -2,6 +2,7 @@ package com.example.faheemm.photohub;
 
 import android.app.Activity;
 import android.net.Uri;
+import android.net.wifi.p2p.WifiP2pConfig;
 import android.net.wifi.p2p.WifiP2pDevice;
 import android.net.wifi.p2p.WifiP2pDeviceList;
 import android.os.Bundle;
@@ -76,6 +77,7 @@ public class FriendsFragment extends Fragment{
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+
         rootView=inflater.inflate(R.layout.fragment_friends, container,false);
         Button captureButton = (Button) rootView.findViewById(R.id.button_search);
         captureButton.bringToFront();
@@ -131,6 +133,17 @@ public class FriendsFragment extends Fragment{
             adapter.notifyDataSetChanged();
         }
 
+    }
+
+    public interface DeviceActionListener {
+
+        void showDetails(WifiP2pDevice device);
+
+        void cancelDisconnect();
+
+        void connect(WifiP2pConfig config);
+
+        void disconnect();
     }
 /**
      * This interface must be implemented by activities that contain this

@@ -3,6 +3,8 @@ package com.example.faheemm.photohub;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.IntentFilter;
+import android.net.wifi.p2p.WifiP2pConfig;
+import android.net.wifi.p2p.WifiP2pDevice;
 import android.net.wifi.p2p.WifiP2pDeviceList;
 import android.net.wifi.p2p.WifiP2pManager;
 import android.os.Bundle;
@@ -29,7 +31,7 @@ import java.util.ArrayList;
 import java.util.Locale;
 
 
-public class CameraActivity extends ActionBarActivity implements ActionBar.TabListener,WifiP2pManager.ChannelListener,WifiP2pManager.PeerListListener {
+public class CameraActivity extends ActionBarActivity implements ActionBar.TabListener,WifiP2pManager.ChannelListener,WifiP2pManager.PeerListListener,FriendsFragment.DeviceActionListener {
 
     private WifiP2pManager manager;
     private boolean isWifiP2pEnabled = false;
@@ -312,5 +314,38 @@ public class CameraActivity extends ActionBarActivity implements ActionBar.TabLi
 
         }
         return isCreate;
+    }
+
+    @Override
+    public void showDetails(WifiP2pDevice device) {
+
+    }
+
+    @Override
+    public void cancelDisconnect() {
+
+    }
+
+    @Override
+    public void connect(final WifiP2pConfig config) {
+        manager.connect(channel, config, new WifiP2pManager.ActionListener() {
+
+            @Override
+            public void onSuccess() {
+                Toast.makeText(CameraActivity.this, "Connected to:"+config.deviceAddress,
+                        Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onFailure(int reason) {
+                Toast.makeText(CameraActivity.this, "Connect failed. Retry.",
+                        Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    @Override
+    public void disconnect() {
+
     }
 }

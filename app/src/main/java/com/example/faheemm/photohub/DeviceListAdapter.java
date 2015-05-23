@@ -1,13 +1,20 @@
 package com.example.faheemm.photohub;
 
 
+import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.net.wifi.WpsInfo;
+import android.net.wifi.p2p.WifiP2pConfig;
 import android.net.wifi.p2p.WifiP2pDevice;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import java.util.ArrayList;
@@ -16,6 +23,7 @@ public class DeviceListAdapter extends BaseAdapter{
     private ArrayList<WifiP2pDevice> peers;
     private Context context;
     private LayoutInflater inflater;
+    ProgressDialog progressDialog = null;
     public DeviceListAdapter(Context context,ArrayList<WifiP2pDevice> peers){
         this.context=context;
         this.peers=peers;
@@ -51,19 +59,48 @@ public class DeviceListAdapter extends BaseAdapter{
         ViewHolder holder=(ViewHolder)convertView.getTag();
         holder.deviceName.setText(device.deviceName);
         holder.deviceDetail.setText(device.deviceAddress);
-        holder.toggleButton.setChecked(device.status==WifiP2pDevice.CONNECTED);
+        if(device.status == WifiP2pDevice.CONNECTED){
+            holder.toggleButton.setText("Connected");
+        }else{
+            holder.toggleButton.setText("Connect");
+        }
+        holder.toggleButton.setTag(position);
+        holder.toggleButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Integer index=(Integer)v.getTag();
+                WifiP2pDevice peer=peers.get(index);
+                WifiP2pConfig config = new WifiP2pConfig();
+				config.deviceAddress = peer.deviceAddress;
+				config.wps.setup = WpsInfo.PBC;
+
+                if (progressDialog != null && progressDialog.isShowing()) {
+					progressDialog.dismiss();
+				}
+                progressDialog=ProgressDialog.show(context, "Press back to cancel",
+                        "Connecting to :" + peer.deviceAddress, true, true, new DialogInterface.OnCancelListener() {
+                            @Override
+                            public void onCancel(DialogInterface dialog) {
+                                Toast.makeText(context,"Canceld",Toast.LENGTH_SHORT).show();
+                            }
+                        });
+
+                ((CameraActivity) context).connect(config);
+
+            }
+        });
         return convertView;
     }
 
     private class  ViewHolder{
         public TextView deviceName;
         public TextView deviceDetail;
-        public ToggleButton toggleButton;
+        public Button toggleButton;
 
         public ViewHolder(View view){
             deviceName=(TextView)view.findViewById(R.id.device_name);
             deviceDetail=(TextView)view.findViewById(R.id.device_detail);
-            toggleButton=(ToggleButton)view.findViewById(R.id.toggleButton);
+            toggleButton=(Button)view.findViewById(R.id.toggleButton);
         }
     }
 }

@@ -124,29 +124,29 @@ public class DeviceDetailFragment extends Fragment implements ConnectionInfoList
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 
-//		String localIP = Utils.getLocalIPAddress();
-//		// Trick to find the ip in the file /proc/net/arp
-//		String client_mac_fixed = new String(device.deviceAddress).replace("99", "19");
-//		String clientIP = Utils.getIPFromMac(client_mac_fixed);
-//
-//		// User has picked an image. Transfer it to group owner i.e peer using
-//		// FileTransferService.
-//		Uri uri = data.getData();
-//		TextView statusText = (TextView) mContentView.findViewById(R.id.status_text);
-//		statusText.setText("Sending: " + uri);
-//		Log.d(WiFiDirectActivity.TAG, "Intent----------- " + uri);
-//		Intent serviceIntent = new Intent(getActivity(), FileTransferService.class);
-//		serviceIntent.setAction(FileTransferService.ACTION_SEND_FILE);
-//		serviceIntent.putExtra(FileTransferService.EXTRAS_FILE_PATH, uri.toString());
-//
-//		if(localIP.equals(IP_SERVER)){
-//			serviceIntent.putExtra(FileTransferService.EXTRAS_ADDRESS, clientIP);
-//		}else{
-//			serviceIntent.putExtra(FileTransferService.EXTRAS_ADDRESS, IP_SERVER);
-//		}
-//
-//		serviceIntent.putExtra(FileTransferService.EXTRAS_PORT, PORT);
-//		getActivity().startService(serviceIntent);
+		String localIP = Utils.getLocalIPAddress();
+		// Trick to find the ip in the file /proc/net/arp
+		String client_mac_fixed = new String(device.deviceAddress).replace("99", "19");
+		String clientIP = Utils.getIPFromMac(client_mac_fixed);
+
+		// User has picked an image. Transfer it to group owner i.e peer using
+		// FileTransferService.
+		Uri uri = data.getData();
+		TextView statusText = (TextView) mContentView.findViewById(R.id.status_text);
+		statusText.setText("Sending: " + uri);
+		Log.d(WiFiDirectActivity.TAG, "Intent----------- " + uri);
+		Intent serviceIntent = new Intent(getActivity(), FileTransferService.class);
+		serviceIntent.setAction(FileTransferService.ACTION_SEND_FILE);
+		serviceIntent.putExtra(FileTransferService.EXTRAS_FILE_PATH, uri.toString());
+
+		if(localIP.equals(IP_SERVER)){
+			serviceIntent.putExtra(FileTransferService.EXTRAS_ADDRESS, clientIP);
+		}else{
+			serviceIntent.putExtra(FileTransferService.EXTRAS_ADDRESS, IP_SERVER);
+		}
+
+		serviceIntent.putExtra(FileTransferService.EXTRAS_PORT, PORT);
+		getActivity().startService(serviceIntent);
 	}
 
 	@Override

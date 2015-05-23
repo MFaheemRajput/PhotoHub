@@ -1,12 +1,13 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools" tools:context=".CameraActivity">
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".CameraActivity">
 
-
-
-    <item android:id="@+id/share" android:title="Share"
-        android:orderInCategory="100" app:showAsAction="always"
+    <item
+        android:id="@+id/share"
         android:icon="@drawable/share"
-        />
+        android:orderInCategory="100"
+        android:title="Share"
+        app:showAsAction="always" />
 
 </menu>
