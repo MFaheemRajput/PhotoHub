@@ -162,7 +162,7 @@ public class GalleryFragment extends Fragment {
 
         rootView = inflater.inflate(R.layout.fragment_gallery, container, false);
         ;
-        peers.addAll(((CameraActivity) getActivity()).getPeers());
+//        peers.addAll(((CameraActivity) getActivity()).getPeers());
         Gallery gallery = (Gallery) rootView.findViewById(R.id.gallery1);
         gallery.setAdapter(new ImageAdapter(getActivity(), imageIDs, rootView));
         gallery.setSelection(0);
