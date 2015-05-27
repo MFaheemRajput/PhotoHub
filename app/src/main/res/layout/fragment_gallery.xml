@@ -27,7 +27,7 @@
         android:id="@+id/fffe"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:background="@color/aviary_accent_red"
+        
 
     >
 

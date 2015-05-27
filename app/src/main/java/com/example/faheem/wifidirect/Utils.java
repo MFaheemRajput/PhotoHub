@@ -13,7 +13,7 @@ import android.util.Log;
 
 public class Utils {
 
-	private final static String p2pInt = "p2p-p2p0";
+	private final static String p2pInt = "p2p0";
 
 	public static String getIPFromMac(String MAC) {
 		/*
@@ -61,13 +61,13 @@ public class Utils {
 		 * 
 		 * */
 		try {
-			for (Enumeration<NetworkInterface> en = NetworkInterface.getNetworkInterfaces(); en.hasMoreElements();) {
+			for (Enumeration<NetworkInterface> en = NetworkInterface.getNetworkInterfaces(); en.hasMoreElements(); ) {
 				NetworkInterface intf = en.nextElement();
-				for (Enumeration<InetAddress> enumIpAddr = intf.getInetAddresses(); enumIpAddr.hasMoreElements();) {
+				for (Enumeration<InetAddress> enumIpAddr = intf.getInetAddresses(); enumIpAddr.hasMoreElements(); ) {
 					InetAddress inetAddress = enumIpAddr.nextElement();
 
 					String iface = intf.getName();
-					if(iface.matches(".*" +p2pInt+ ".*")){
+					if (iface.matches(".*" + p2pInt + ".*")) {
 						if (inetAddress instanceof Inet4Address) { // fix for Galaxy Nexus. IPv4 is easy to use :-)
 							return getDottedDecimalIP(inetAddress.getAddress());
 						}

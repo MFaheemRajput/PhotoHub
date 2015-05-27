@@ -25,8 +25,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.aviary.android.feather.sdk.AviaryIntent;
-import com.aviary.android.feather.sdk.internal.headless.utils.MegaPixels;
+
 import com.example.faheem.wifidirect.FileTransferService;
 import com.example.faheem.wifidirect.Utils;
 import com.example.faheem.wifidirect.WiFiDirectActivity;
@@ -200,15 +199,18 @@ public class GalleryFragment extends Fragment {
 
                 String localIP = Utils.getLocalIPAddress();
                 // Trick to find the ip in the file /proc/net/arp
-
+                WifiP2pDevice device=((CameraActivity)getActivity()).getSelectedDevice();
+                if(null==device){
+                    Toast.makeText(getActivity(),"No device selected",Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 String client_mac_fixed = new String(device.deviceAddress).replace("99", "19");
                 String clientIP = Utils.getIPFromMac(client_mac_fixed);
 
                 // User has picked an image. Transfer it to group owner i.e peer using
                 // FileTransferService.
+                Toast.makeText(getActivity(),"Sending: " + uri,Toast.LENGTH_SHORT).show();
 
-                TextView statusText = (TextView) mContentView.findViewById(R.id.status_text);
-                statusText.setText("Sending: " + uri);
                 Log.d(WiFiDirectActivity.TAG, "Intent----------- " + uri);
                 Intent serviceIntent = new Intent(getActivity(), FileTransferService.class);
                 serviceIntent.setAction(FileTransferService.ACTION_SEND_FILE);
@@ -267,6 +269,11 @@ public class GalleryFragment extends Fragment {
     //TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
 
+    }
+
+    public void refreshData(){
+        Gallery gallery = (Gallery) rootView.findViewById(R.id.gallery1);
+        gallery.setAdapter(new ImageAdapter(getActivity(), imageIDs, rootView));
     }
 
     @Override

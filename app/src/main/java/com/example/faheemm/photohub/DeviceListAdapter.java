@@ -50,7 +50,7 @@ public class DeviceListAdapter extends BaseAdapter{
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView, ViewGroup parent) {
         if(null==convertView){
             convertView=inflater.inflate(R.layout.device_list_item,parent,false);
             convertView.setTag(new ViewHolder(convertView));
@@ -68,25 +68,26 @@ public class DeviceListAdapter extends BaseAdapter{
         holder.toggleButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Integer index=(Integer)v.getTag();
-                WifiP2pDevice peer=peers.get(index);
+                Integer index = (Integer) v.getTag();
+                WifiP2pDevice peer = peers.get(index);
                 WifiP2pConfig config = new WifiP2pConfig();
-				config.deviceAddress = peer.deviceAddress;
-				config.wps.setup = WpsInfo.PBC;
+                config.deviceAddress = peer.deviceAddress;
+                config.wps.setup = WpsInfo.PBC;
 
                 if (progressDialog != null && progressDialog.isShowing()) {
-					progressDialog.dismiss();
-				}
-                progressDialog=ProgressDialog.show(context, "Press back to cancel",
-                        "Connecting to :" + peer.deviceAddress, true, true, new DialogInterface.OnCancelListener() {
-                            @Override
-                            public void onCancel(DialogInterface dialog) {
-                                Toast.makeText(context,"Canceld",Toast.LENGTH_SHORT).show();
-                            }
-                        });
+                    progressDialog.dismiss();
+                }
 
                 ((CameraActivity) context).connect(config);
 
+            }
+        });
+        holder.deviceName.setTag(position);
+        holder.deviceName.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Integer index=(Integer)v.getTag();
+                        ((CameraActivity) context).setSelectedDevice((WifiP2pDevice)getItem(index));
             }
         });
         return convertView;

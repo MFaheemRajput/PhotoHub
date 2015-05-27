@@ -132,8 +132,8 @@ public class DeviceDetailFragment extends Fragment implements ConnectionInfoList
 		// User has picked an image. Transfer it to group owner i.e peer using
 		// FileTransferService.
 		Uri uri = data.getData();
-		TextView statusText = (TextView) mContentView.findViewById(R.id.status_text);
-		statusText.setText("Sending: " + uri);
+//		TextView statusText = (TextView) mContentView.findViewById(R.id.status_text);
+//		statusText.setText("Sending: " + uri);
 		Log.d(WiFiDirectActivity.TAG, "Intent----------- " + uri);
 		Intent serviceIntent = new Intent(getActivity(), FileTransferService.class);
 		serviceIntent.setAction(FileTransferService.ACTION_SEND_FILE);

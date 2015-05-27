@@ -2,11 +2,15 @@ package com.example.faheemm.photohub;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
 import android.content.IntentFilter;
+import android.net.Uri;
 import android.net.wifi.p2p.WifiP2pConfig;
 import android.net.wifi.p2p.WifiP2pDevice;
 import android.net.wifi.p2p.WifiP2pDeviceList;
+import android.net.wifi.p2p.WifiP2pInfo;
 import android.net.wifi.p2p.WifiP2pManager;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.app.Fragment;
@@ -22,16 +26,24 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.faheem.wifidirect.WiFiDirectActivity;
 import com.example.faheem.wifidirect.WiFiDirectBroadcastReceiver;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.ServerSocket;
+import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Locale;
 
 
-public class CameraActivity extends ActionBarActivity implements ActionBar.TabListener,WifiP2pManager.ChannelListener,WifiP2pManager.PeerListListener,FriendsFragment.DeviceActionListener {
+public class CameraActivity extends ActionBarActivity implements ActionBar.TabListener,WifiP2pManager.ChannelListener,WifiP2pManager.PeerListListener,FriendsFragment.DeviceActionListener,WifiP2pManager.ConnectionInfoListener {
 
     private WifiP2pManager manager;
     private boolean isWifiP2pEnabled = false;
@@ -47,6 +59,15 @@ public class CameraActivity extends ActionBarActivity implements ActionBar.TabLi
     ViewPager mViewPager;
 
     WifiP2pDeviceList peers;
+    WifiP2pDevice selectedDevice;
+
+    public WifiP2pDevice getSelectedDevice() {
+        return selectedDevice;
+    }
+
+    public void setSelectedDevice(WifiP2pDevice selectedDevice) {
+        this.selectedDevice = selectedDevice;
+    }
 
     public WifiP2pDeviceList getPeers() {
         return peers;
@@ -347,5 +368,95 @@ public class CameraActivity extends ActionBarActivity implements ActionBar.TabLi
     @Override
     public void disconnect() {
 
+    }
+
+    @Override
+    public void onConnectionInfoAvailable(WifiP2pInfo info) {
+        new ServerAsyncTask(CameraActivity.this).execute();
+    }
+
+    public class ServerAsyncTask extends AsyncTask<Void, Void, String> {
+
+        private final Context context;
+
+
+        /**
+         * @param context
+         */
+        public ServerAsyncTask(Context context) {
+            this.context = context;
+
+        }
+
+        @Override
+        protected String doInBackground(Void... params) {
+            try {
+                ServerSocket serverSocket = new ServerSocket(8988);
+                Log.d(WiFiDirectActivity.TAG, "Server: Socket opened");
+                Socket client = serverSocket.accept();
+                Log.d(WiFiDirectActivity.TAG, "Server: connection done");
+                final File f = new File(Environment.getExternalStorageDirectory() + "/PhotoHub/"+ System.currentTimeMillis()
+                        + ".jpg");
+
+                File dirs = new File(f.getParent());
+                if (!dirs.exists())
+                    dirs.mkdirs();
+                f.createNewFile();
+
+                Log.d(WiFiDirectActivity.TAG, "server: copying files " + f.toString());
+                InputStream inputstream = client.getInputStream();
+                copyFile(inputstream, new FileOutputStream(f));
+                serverSocket.close();
+
+                return f.getAbsolutePath();
+            } catch (IOException e) {
+                Log.e(WiFiDirectActivity.TAG, e.getMessage());
+                return null;
+            }
+        }
+
+        /*
+         * (non-Javadoc)
+         * @see android.os.AsyncTask#onPostExecute(java.lang.Object)
+         */
+        @Override
+        protected void onPostExecute(String result) {
+//            if (result != null) {
+//                statusText.setText("File copied - " + result);
+//                Intent intent = new Intent();
+//                intent.setAction(Intent.ACTION_VIEW);
+//                intent.setDataAndType(Uri.parse("file://" + result), "image/*");
+//                context.startActivity(intent);
+//            }
+            ((GalleryFragment)mSectionsPagerAdapter.getItem(1)).refreshData();
+            new ServerAsyncTask(CameraActivity.this).execute();
+        }
+
+        /*
+         * (non-Javadoc)
+         * @see android.os.AsyncTask#onPreExecute()
+         */
+        @Override
+        protected void onPreExecute() {
+
+        }
+
+    }
+
+    public static boolean copyFile(InputStream inputStream, OutputStream out) {
+        byte buf[] = new byte[1024];
+        int len;
+        try {
+            while ((len = inputStream.read(buf)) != -1) {
+                out.write(buf, 0, len);
+
+            }
+            out.close();
+            inputStream.close();
+        } catch (IOException e) {
+            Log.d(WiFiDirectActivity.TAG, e.toString());
+            return false;
+        }
+        return true;
     }
 }
