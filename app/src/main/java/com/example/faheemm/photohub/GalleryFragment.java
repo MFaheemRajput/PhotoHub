@@ -204,8 +204,9 @@ public class GalleryFragment extends Fragment {
                     Toast.makeText(getActivity(),"No device selected",Toast.LENGTH_SHORT).show();
                     return;
                 }
+
                 String client_mac_fixed = new String(device.deviceAddress).replace("99", "19");
-                String clientIP = Utils.getIPFromMac(client_mac_fixed);
+//                String clientIP = Utils.getIPFromMac(client_mac_fixed);
 
                 // User has picked an image. Transfer it to group owner i.e peer using
                 // FileTransferService.
@@ -216,12 +217,70 @@ public class GalleryFragment extends Fragment {
                 serviceIntent.setAction(FileTransferService.ACTION_SEND_FILE);
                 serviceIntent.putExtra(FileTransferService.EXTRAS_FILE_PATH, uri.toString());
 
-                if(localIP.equals(IP_SERVER)){
-                    serviceIntent.putExtra(FileTransferService.EXTRAS_ADDRESS, clientIP);
-                }else{
-                    serviceIntent.putExtra(FileTransferService.EXTRAS_ADDRESS, IP_SERVER);
+//                if(localIP.equals(IP_SERVER)){
+//                    serviceIntent.putExtra(FileTransferService.EXTRAS_ADDRESS, clientIP);
+//                }else{
+                CameraActivity activity=(CameraActivity)getActivity();
+                if(activity.getWifiP2pInfo()==null){
+                    return;
                 }
+                serviceIntent.putExtra(FileTransferService.EXTRAS_ADDRESS, activity.getWifiP2pInfo());
+//                }
+                serviceIntent.putExtra(FileTransferService.EXTRAS_REQUEST_TYPE, CameraActivity.POST_REQUEST);
+                serviceIntent.putExtra(FileTransferService.EXTRAS_PORT, PORT);
+                getActivity().startService(serviceIntent);
 
+            }
+
+        });
+        Button receiveButton = (Button)rootView.findViewById(R.id.receiveButton);
+
+        receiveButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                File sdDir = new File(Environment.getExternalStoragePublicDirectory(
+                        Environment.DIRECTORY_PICTURES), "PhotoHub");
+                File[] imagesArray = sdDir.listFiles();
+                File  singleFile = imagesArray[imageIndex];
+                Uri uri = Uri.fromFile(singleFile);
+
+
+                String localIP = Utils.getLocalIPAddress();
+                Log.d(WiFiDirectActivity.TAG, "LocalAddress----------- " + localIP);
+                // Trick to find the ip in the file /proc/net/arp
+                WifiP2pDevice device=((CameraActivity)getActivity()).getSelectedDevice();
+                if(null==device){
+                    Toast.makeText(getActivity(),"No device selected",Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                String client_mac_fixed = new String(device.deviceAddress).replace("99", "19");
+//                String clientIP = Utils.getIPFromMac(client_mac_fixed);
+
+                // User has picked an image. Transfer it to group owner i.e peer using
+                // FileTransferService.
+                Toast.makeText(getActivity(),"Sending: " + uri,Toast.LENGTH_SHORT).show();
+
+                Log.d(WiFiDirectActivity.TAG, "Intent----------- " + uri);
+                Intent serviceIntent = new Intent(getActivity(), FileTransferService.class);
+                serviceIntent.setAction(FileTransferService.ACTION_SEND_FILE);
+                serviceIntent.putExtra(FileTransferService.EXTRAS_FILE_PATH, uri.toString());
+
+//                if(localIP.equals(IP_SERVER)){
+//                    serviceIntent.putExtra(FileTransferService.EXTRAS_ADDRESS, clientIP);
+//                }else{
+                CameraActivity activity=(CameraActivity)getActivity();
+                if(activity.getWifiP2pInfo()==null){
+                    Toast.makeText(getActivity(),"WIFI INfo is not available",Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                if(activity.getWifiP2pInfo().groupOwnerAddress.getHostAddress().equals(localIP)){
+                    Toast.makeText(getActivity(),"This Machne is Server",Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                Log.d(WiFiDirectActivity.TAG, "ServerAddress----------- " + activity.getWifiP2pInfo().groupOwnerAddress.getHostAddress());
+                serviceIntent.putExtra(FileTransferService.EXTRAS_ADDRESS, activity.getWifiP2pInfo().groupOwnerAddress.getHostAddress());
+//                }
+                serviceIntent.putExtra(FileTransferService.EXTRAS_REQUEST_TYPE, CameraActivity.GET_REQUEST);
                 serviceIntent.putExtra(FileTransferService.EXTRAS_PORT, PORT);
                 getActivity().startService(serviceIntent);
 

@@ -32,7 +32,10 @@ import android.widget.Toast;
 import com.example.faheem.wifidirect.WiFiDirectActivity;
 import com.example.faheem.wifidirect.WiFiDirectBroadcastReceiver;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -44,6 +47,10 @@ import java.util.Locale;
 
 
 public class CameraActivity extends ActionBarActivity implements ActionBar.TabListener,WifiP2pManager.ChannelListener,WifiP2pManager.PeerListListener,FriendsFragment.DeviceActionListener,WifiP2pManager.ConnectionInfoListener {
+    public static final int POST_REQUEST=10;
+    public static final int GET_REQUEST=11;
+
+    private WifiP2pInfo wifiP2pInfo;
 
     private WifiP2pManager manager;
     private boolean isWifiP2pEnabled = false;
@@ -63,6 +70,10 @@ public class CameraActivity extends ActionBarActivity implements ActionBar.TabLi
 
     public WifiP2pDevice getSelectedDevice() {
         return selectedDevice;
+    }
+
+    public WifiP2pInfo getWifiP2pInfo() {
+        return wifiP2pInfo;
     }
 
     public void setSelectedDevice(WifiP2pDevice selectedDevice) {
@@ -128,6 +139,11 @@ public class CameraActivity extends ActionBarActivity implements ActionBar.TabLi
         manager = (WifiP2pManager) getSystemService(Context.WIFI_P2P_SERVICE);
         channel = manager.initialize(this, getMainLooper(), null);
 
+        discover();
+
+    }
+
+    public void discover(){
         manager.discoverPeers(channel, new WifiP2pManager.ActionListener() {
             @Override
             public void onSuccess() {
@@ -139,10 +155,7 @@ public class CameraActivity extends ActionBarActivity implements ActionBar.TabLi
                 Log.d("wifi", "onfailure");
             }
         });
-
     }
-
-
 
     @Override
     public void onResume() {
@@ -372,10 +385,14 @@ public class CameraActivity extends ActionBarActivity implements ActionBar.TabLi
 
     @Override
     public void onConnectionInfoAvailable(WifiP2pInfo info) {
-        new ServerAsyncTask(CameraActivity.this).execute();
+        this.wifiP2pInfo=info;
+        if(info.groupFormed && info.isGroupOwner){
+            new ServerAsyncTask(CameraActivity.this).execute();
+        }
     }
 
     public class ServerAsyncTask extends AsyncTask<Void, Void, String> {
+
 
         private final Context context;
 
@@ -404,8 +421,58 @@ public class CameraActivity extends ActionBarActivity implements ActionBar.TabLi
                 f.createNewFile();
 
                 Log.d(WiFiDirectActivity.TAG, "server: copying files " + f.toString());
-                InputStream inputstream = client.getInputStream();
-                copyFile(inputstream, new FileOutputStream(f));
+                DataInputStream dataInputStream=new DataInputStream(client.getInputStream());
+                int requestType=dataInputStream.readInt();
+                if(requestType==POST_REQUEST){
+                    copyFile(dataInputStream, new FileOutputStream(f));
+                }else if(requestType==GET_REQUEST){
+
+                    File sdDir = new File(Environment.getExternalStoragePublicDirectory(
+                            Environment.DIRECTORY_PICTURES), "PhotoHub");
+                    File[] imagesArray = sdDir.listFiles();
+
+                    DataOutputStream dataOutputStream=new DataOutputStream(client.getOutputStream());
+                    dataOutputStream.writeInt(imagesArray.length);
+
+                    for (File file:imagesArray){
+                        dataOutputStream.writeLong(file.length());
+
+                        FileInputStream inputStream=new FileInputStream(file);
+                        byte buf[] = new byte[1024];
+                        int len;
+                        int theByte = 0;
+
+
+                        try {
+//                            while((theByte = inputStream.read()) != -1){
+//                                dataOutputStream.write(theByte);
+//                                Log.d("","WrittenByte"+theByte);
+//                            }
+//                            while ((len = inputStream.read(buf)) != -1) {
+//                                dataOutputStream.write(buf, 0, len);
+//
+//                            }
+//                            out.close();
+                            Log.d("","FileSize "+file.length());
+                            for(int j = 0; j < file.length(); j++){
+                                dataOutputStream.write(inputStream.read());
+                                Log.d("", "Current File Lenth: " + ((float)j / file.length()) * 100);
+//                                Log.d("", "Current File Lenth: " + j/file.length()*100);
+//                                Log.d("", "Current Character: " + j);
+                            }
+                            inputStream.close();
+
+                        } catch (IOException e) {
+                            Log.d(WiFiDirectActivity.TAG, e.toString());
+
+                        }
+//                        copyFile(new FileInputStream(file),dataOutputStream);
+                    }
+                    dataOutputStream.close();
+                    dataOutputStream.flush();
+
+                }
+//
                 serverSocket.close();
 
                 return f.getAbsolutePath();

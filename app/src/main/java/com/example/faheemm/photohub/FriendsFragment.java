@@ -88,8 +88,7 @@ public class FriendsFragment extends Fragment{
                     public void onClick(View v) {
                         // get an image from the camera
 
-                        Toast.makeText(FriendsFragment.this.getActivity(), "Button Pressed", Toast.LENGTH_LONG).show();
-
+                        ((CameraActivity)getActivity()).discover();
 
                     }
                 }

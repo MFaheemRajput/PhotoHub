@@ -90,7 +90,7 @@ public class WiFiDirectBroadcastReceiver extends BroadcastReceiver {
 
             NetworkInfo networkInfo = (NetworkInfo) intent
                     .getParcelableExtra(WifiP2pManager.EXTRA_NETWORK_INFO);
-
+            Log.d(WiFiDirectActivity.TAG, "P2P CONNECTION changed");
             if (networkInfo.isConnected()) {
 
                 // we are connected with the other device, request connection

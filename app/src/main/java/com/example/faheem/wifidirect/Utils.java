@@ -60,25 +60,48 @@ public class Utils {
 		 * http://thinkandroid.wordpress.com/2010/03/27/incorporating-socket-programming-into-your-applications/
 		 * 
 		 * */
-		try {
-			for (Enumeration<NetworkInterface> en = NetworkInterface.getNetworkInterfaces(); en.hasMoreElements(); ) {
-				NetworkInterface intf = en.nextElement();
-				for (Enumeration<InetAddress> enumIpAddr = intf.getInetAddresses(); enumIpAddr.hasMoreElements(); ) {
-					InetAddress inetAddress = enumIpAddr.nextElement();
+//		try {
+//			for (Enumeration<NetworkInterface> en = NetworkInterface.getNetworkInterfaces(); en.hasMoreElements(); ) {
+//				NetworkInterface intf = en.nextElement();
+//				for (Enumeration<InetAddress> enumIpAddr = intf.getInetAddresses(); enumIpAddr.hasMoreElements(); ) {
+//					InetAddress inetAddress = enumIpAddr.nextElement();
+//
+//					String iface = intf.getName();
+//					if (iface.matches(".*" + p2pInt + ".*")) {
+//						if (inetAddress instanceof Inet4Address) { // fix for Galaxy Nexus. IPv4 is easy to use :-)
+//							return getDottedDecimalIP(inetAddress.getAddress());
+//						}
+//					}
+//				}
+//			}
+//		} catch (SocketException ex) {
+//
+//		} catch (NullPointerException ex) {
+//
+//		}
 
-					String iface = intf.getName();
-					if (iface.matches(".*" + p2pInt + ".*")) {
-						if (inetAddress instanceof Inet4Address) { // fix for Galaxy Nexus. IPv4 is easy to use :-)
-							return getDottedDecimalIP(inetAddress.getAddress());
-						}
+		//Loop through all the network interface devices
+		try{
+			for (Enumeration<NetworkInterface> enumeration = NetworkInterface
+					.getNetworkInterfaces(); enumeration.hasMoreElements();) {
+				NetworkInterface networkInterface = enumeration.nextElement();
+				//Loop through all the ip addresses of the network interface devices
+				for (Enumeration<InetAddress> enumerationIpAddr = networkInterface.getInetAddresses(); enumerationIpAddr.hasMoreElements();) {
+					InetAddress inetAddress = enumerationIpAddr.nextElement();
+					//Filter out loopback address and other irrelevant ip addresses
+					if (!inetAddress.isLoopbackAddress() && inetAddress.getAddress().length == 4) {
+						//Print the device ip address in to the text view
+						return inetAddress.getHostAddress();
 					}
 				}
 			}
-		} catch (SocketException ex) {
+		}catch (SocketException ex){
 
-		} catch (NullPointerException ex) {
+		}catch (NullPointerException ex){
 
 		}
+
+
 		return null;
 	}
 

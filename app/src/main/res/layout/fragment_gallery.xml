@@ -39,7 +39,16 @@
             android:layout_marginLeft="75dp"
             android:layout_marginTop="5dp"
             />
-
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/receiveButton"
+            android:text="Receive"
+            android:layout_centerHorizontal="true"
+            android:layout_marginLeft="75dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginRight="5dp"
+            />
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
