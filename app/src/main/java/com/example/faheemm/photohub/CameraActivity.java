@@ -109,14 +109,14 @@ public class CameraActivity extends ActionBarActivity implements ActionBar.TabLi
             @Override
             public void onPageSelected(int position) {
                 actionBar.setSelectedNavigationItem(position);
+                Fragment fragment=((SectionsPagerAdapter) mViewPager.getAdapter()).getItem(position);
                 if(position==2 && null!=peers){
-//                    onPeersAvailable(peers);
-
-                    Fragment fragment=((SectionsPagerAdapter) mViewPager.getAdapter()).getItem(2);
-
+                    onPeersAvailable(peers);
                     if(null!=fragment && fragment instanceof FriendsFragment){
                         ((FriendsFragment)fragment).onPeersAvailable(peers);
                     }
+                }else if(position==1){
+                    ((GalleryFragment)fragment).refreshData();
                 }
             }
         });

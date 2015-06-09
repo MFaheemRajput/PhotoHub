@@ -248,12 +248,12 @@ public class GalleryFragment extends Fragment {
                 String localIP = Utils.getLocalIPAddress();
                 Log.d(WiFiDirectActivity.TAG, "LocalAddress----------- " + localIP);
                 // Trick to find the ip in the file /proc/net/arp
-                WifiP2pDevice device=((CameraActivity)getActivity()).getSelectedDevice();
-                if(null==device){
-                    Toast.makeText(getActivity(),"No device selected",Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                String client_mac_fixed = new String(device.deviceAddress).replace("99", "19");
+//                WifiP2pDevice device=((CameraActivity)getActivity()).getSelectedDevice();
+//                if(null==device){
+//                    Toast.makeText(getActivity(),"No device selected",Toast.LENGTH_SHORT).show();
+//                    return;
+//                }
+//                String client_mac_fixed = new String(device.deviceAddress).replace("99", "19");
 //                String clientIP = Utils.getIPFromMac(client_mac_fixed);
 
                 // User has picked an image. Transfer it to group owner i.e peer using
