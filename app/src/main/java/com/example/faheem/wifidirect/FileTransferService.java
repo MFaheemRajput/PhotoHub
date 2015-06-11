@@ -23,6 +23,7 @@ import android.util.Log;
 
 import com.example.faheemm.photohub.CameraActivity;
 import com.example.faheemm.photohub.CameraFragment;
+import com.example.faheemm.photohub.UpdateReceiver;
 
 /**
  * A service that process each file transfer request i.e Intent by opening a
@@ -79,19 +80,34 @@ public class FileTransferService extends IntentService {
 				if(requestType== CameraActivity.POST_REQUEST){
 
 					DeviceDetailFragment.copyFile(is, stream);
+
+
 				}else if(requestType== CameraActivity.GET_REQUEST){
 
 					DataInputStream dataInputStream=new DataInputStream(socket.getInputStream());
 					int files=dataInputStream.readInt();
 //                    dataInputStream.close();
-                    Log.d(WiFiDirectActivity.TAG, "FilesOndServer:"+files);
+                    Log.d(WiFiDirectActivity.TAG, "FilesOndServer:" + files);
+
 					for (int i=0;i<files;i++){
 //                        dataInputStream=new DataInputStream(socket.getInputStream());
 						File file= CameraFragment.getOutputMediaFile(CameraFragment.MEDIA_TYPE_IMAGE);
 //						DeviceDetailFragment.copyFile(dataInputStream, new FileOutputStream(file));
                         long fileLength=dataInputStream.readLong();
                         FileOutputStream fileOutputStream=new FileOutputStream(file);
-                        for(int j = 0; j < fileLength; j++) fileOutputStream.write(dataInputStream.read());
+                        for(int j = 0; j < fileLength; j++){
+							fileOutputStream.write(dataInputStream.read());
+
+
+                            if(j%100==0){
+                                Intent updateIntent=new Intent("com.photohub.FILE_UPDATE");
+
+                                updateIntent.putExtra("FileSize", (int)fileLength);
+                                updateIntent.putExtra("Bytes", j);
+                                sendBroadcast(updateIntent);
+                            }
+
+						}
 
                         fileOutputStream.close();
                         fileOutputStream.flush();

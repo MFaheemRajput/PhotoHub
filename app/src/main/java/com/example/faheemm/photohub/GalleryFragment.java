@@ -205,7 +205,7 @@ public class GalleryFragment extends Fragment {
                     return;
                 }
 
-                String client_mac_fixed = new String(device.deviceAddress).replace("99", "19");
+//                String client_mac_fixed = new String(device.deviceAddress).replace("99", "19");
 //                String clientIP = Utils.getIPFromMac(client_mac_fixed);
 
                 // User has picked an image. Transfer it to group owner i.e peer using

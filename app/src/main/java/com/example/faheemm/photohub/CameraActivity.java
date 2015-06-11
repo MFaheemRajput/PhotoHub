@@ -1,5 +1,6 @@
 package com.example.faheemm.photohub;
 
+import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -26,6 +27,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -50,6 +52,9 @@ public class CameraActivity extends ActionBarActivity implements ActionBar.TabLi
     public static final int POST_REQUEST=10;
     public static final int GET_REQUEST=11;
 
+    private static ProgressBar progressDialog;
+
+    private BroadcastReceiver updateReceiver;
     private WifiP2pInfo wifiP2pInfo;
 
     private WifiP2pManager manager;
@@ -140,19 +145,42 @@ public class CameraActivity extends ActionBarActivity implements ActionBar.TabLi
         channel = manager.initialize(this, getMainLooper(), null);
 
         discover();
+        updateReceiver=new BroadcastReceiver(){
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                if(progressDialog==null){
+                    progressDialog=(ProgressBar)findViewById(R.id.progress);
 
+                }
+
+                int totalFileSize=intent.getIntExtra("FileSize",0);
+                int receivedBytes=intent.getIntExtra("Bytes",0);
+                progressDialog.setMax(totalFileSize);
+
+                progressDialog.setProgress(receivedBytes);
+            }
+        };
+        IntentFilter filter=new IntentFilter();
+        filter.addAction("com.photohub.FILE_UPDATE");
+        registerReceiver(updateReceiver, filter);
+
+        Intent updateIntent=new Intent("com.photohub.FILE_UPDATE");
+
+        updateIntent.putExtra("FileSize", 100);
+        updateIntent.putExtra("Bytes", 50);
+        sendBroadcast(updateIntent);
     }
 
     public void discover(){
         manager.discoverPeers(channel, new WifiP2pManager.ActionListener() {
             @Override
             public void onSuccess() {
-                Log.d("wifi", "onsuccess");
+                Log.d("wifi", "onSuccess");
             }
 
             @Override
             public void onFailure(int reasonCode) {
-                Log.d("wifi", "onfailure");
+                Log.d("wifi", "onFailure");
             }
         });
     }
@@ -167,6 +195,12 @@ public class CameraActivity extends ActionBarActivity implements ActionBar.TabLi
     public void onPause() {
         super.onPause();
         unregisterReceiver(receiver);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unregisterReceiver(updateReceiver);
     }
 
     @Override
@@ -204,7 +238,7 @@ public class CameraActivity extends ActionBarActivity implements ActionBar.TabLi
             manager.initialize(this, getMainLooper(), this);
         } else {
             Toast.makeText(this,
-                    "Severe! Channel is probably lost premanently. Try Disable/Re-Enable P2P.",
+                    "Severe! Channel is probably lost permanently. Try Disable/Re-Enable P2P.",
                     Toast.LENGTH_LONG).show();
         }
     }
@@ -526,4 +560,6 @@ public class CameraActivity extends ActionBarActivity implements ActionBar.TabLi
         }
         return true;
     }
+
+
 }
